@@ -1,8 +1,10 @@
 'use strict'
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const utils = require('./utils');
+const joinPaths = require('path').join;
 
-module.exports = (app, express) => {
+const applyMiddleware = (app, express) => {
   // middlewares
   
   // morgan for loggin our incoming requests during development
@@ -14,5 +16,12 @@ module.exports = (app, express) => {
     extended: true
   }));
   
+  // error handling and error logging middlewares
+  app.use(utils.errorHandler);
+  app.use(utils.logError);
   
+  // feeding up dummy html for now
+  app.use(express.static(joinPaths(__dirname, '../../client/public')));
 }
+
+module.exports = applyMiddleware;
